@@ -8,6 +8,16 @@ const resources = {
     iron: { name: "Iron", count: 50, limit: 50, rate: 0, icon: "Images/iron.png", description: "더 강한 도구와 무기를 제작하는 데 사용됩니다." },
 };
 
+// types of actions
+const actions = [
+    { id: "collectAmino", name: "Collect Amino Acid", cost: {}, produces: { aminoAcid: 1 }, unlocked: true },
+    { id: "createProtein", name: "Create Protein", cost: { aminoAcid: 3 }, produces: { protein: 1 }, unlocked: true },
+    { id: "collectStone", name: "Collect Stone", cost: {}, produces: { stone: 1 }, unlocked: true }, // 돌 수집 액션
+    { id: "collectIron", name: "Collect Iron", cost: {}, produces: { iron: 1 }, unlocked: false }, // 철 수집 액션 (잠금 상태)
+    { id: "createRNA", name: "Create RNA", cost: { protein: 5 }, produces: { rna: 1 }, unlocked: false },
+    { id: "createDNA", name: "Create DNA", cost: { rna: 2 }, produces: { dna: 1 }, unlocked: false },
+];
+
 // 시대 정의
 const ages = ["Prehistoric", "Ancient", "Medieval", "Industrial", "Modern", "Space"];
 let currentAge = 1; // 고대 시대에서 시작하도록 초기값 변경
