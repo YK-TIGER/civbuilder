@@ -1,26 +1,24 @@
-// I love this new way of organizing, really
-
 // types of resources
 const resources = {
-    aminoAcid: { name: "Amino Acid", count: 0, limit: 100, rate: 0, icon: "Images/aminoacid.png" },
-    protein: { name: "Protein", count: 0, limit: 100, rate: 0, icon: "Images/protein.png" },
-    rna: { name: "RNA", count: 0, limit: 50, rate: 0, icon: "Images/rna.png" },
-    dna: { name: "DNA", count: 0, limit: 25, rate: 0, icon: "Images/dna.png" },
+    aminoAcid: { name: "Amino Acid", count: 0, limit: 100, rate: 0, icon: "Images/aminoacid.png", description: "Basic building block of proteins." },
+    protein: { name: "Protein", count: 0, limit: 100, rate: 0, icon: "Images/protein.png", description: "Essential molecules formed from amino acids." },
+    rna: { name: "RNA", count: 0, limit: 50, rate: 0, icon: "Images/rna.png", description: "Carries genetic instructions for protein synthesis." },
+    dna: { name: "DNA", count: 0, limit: 25, rate: 0, icon: "Images/dna.png", description: "Genetic blueprint for cellular development." },
 };
 
 // types of actions
 const actions = [
-    { id: "collectAmino", name: "Collect Amino Acid", cost: {}, produces: { aminoAcid: 1 }, unlocked: true },
-    { id: "createProtein", name: "Create Protein", cost: { aminoAcid: 3 }, produces: { protein: 1 }, unlocked: true },
-    { id: "createRNA", name: "Create RNA", cost: { protein: 5 }, produces: { rna: 1 }, unlocked: false },
-    { id: "createDNA", name: "Create DNA", cost: { rna: 2 }, produces: { dna: 1 }, unlocked: false },
+    { id: "collectAmino", name: "Collect Amino Acid", cost: {}, produces: { aminoAcid: 1 }, unlocked: true, description: "Gather basic amino acids for building proteins." },
+    { id: "createProtein", name: "Create Protein", cost: { aminoAcid: 3 }, produces: { protein: 1 }, unlocked: true, description: "Combine amino acids to form proteins." },
+    { id: "createRNA", name: "Create RNA", cost: { protein: 5 }, produces: { rna: 1 }, unlocked: false, description: "Synthesize RNA molecules from proteins." },
+    { id: "createDNA", name: "Create DNA", cost: { rna: 2 }, produces: { dna: 1 }, unlocked: false, description: "Form DNA from RNA molecules." },
 ];
 
 // ages
 const ages = ["Prehistoric", "Ancient", "Medieval", "Industrial", "Modern", "Space"];
 let currentAge = 0;
 
-// update resources
+// Update resources UI
 function updateResources() {
     const resourceBar = document.getElementById("resourcebar");
     resourceBar.innerHTML = "";
@@ -28,14 +26,14 @@ function updateResources() {
         const div = document.createElement("div");
         div.className = "resource";
         div.innerHTML = `
-                    <img src="${resource.icon}" alt="${resource.name}">
-                    <span>${resource.name}: ${resource.count} / ${resource.limit}</span>
-                `;
+            <img src="${resource.icon}" alt="${resource.name}">
+            <span>${resource.name}: ${resource.count} / ${resource.limit}</span>
+        `;
         resourceBar.appendChild(div);
     }
 }
 
-// update buttons
+// Update buttons UI
 function updateButtons() {
     const buttonsDiv = document.getElementById("buttons");
     buttonsDiv.innerHTML = "";
@@ -50,6 +48,7 @@ function updateButtons() {
     }
 }
 
+// Check if an action can be performed
 function canPerformAction(action) {
     for (const [resource, amount] of Object.entries(action.cost)) {
         if (resources[resource].count < amount) {
@@ -59,6 +58,7 @@ function canPerformAction(action) {
     return true;
 }
 
+// Perform an action
 function performAction(action) {
     for (const [resource, amount] of Object.entries(action.cost)) {
         resources[resource].count -= amount;
@@ -70,7 +70,7 @@ function performAction(action) {
     updateUI();
 }
 
-// check unlocked buttons
+// Check for unlocks
 function checkUnlocks() {
     if (resources.protein.count >= 10 && !actions.find(a => a.id === "createRNA").unlocked) {
         actions.find(a => a.id === "createRNA").unlocked = true;
@@ -87,7 +87,7 @@ function checkUnlocks() {
     }
 }
 
-// log writing function
+// Log events in chat
 function logEvent(message) {
     const chat = document.getElementById("chat");
     const p = document.createElement("p");
@@ -96,20 +96,34 @@ function logEvent(message) {
     chat.scrollTop = chat.scrollHeight;
 }
 
-// NIIIIICCCCEEE
-function updateUI() {
-    updateResources();
-    updateButtons();
-}
-
-function gameLoop() {
-    for (const resource of Object.values(resources)) {
-        resource.count = Math.min(resource.count + resource.rate, resource.limit);
+// Toggle Codex visibility
+function toggleCodex() {
+    const codex = document.getElementById("codex");
+    codex.style.display = codex.style.display === "none" ? "block" : "none";
+    if (codex.style.display === "block") {
+        updateCodex();
     }
-    updateUI();
 }
 
-// Perfect code
-setInterval(gameLoop, 1000);
-updateUI();
-logEvent("Welcome to CivBuilder! Start by collecting Amino Acids.");
+// Update Codex content
+function updateCodex() {
+    const codexContent = document.getElementById("codex-content");
+    codexContent.innerHTML = ""; // Clear previous content
+
+    for (const resource of Object.values(resources)) {
+        const div = document.createElement("div");
+        div.className = "codex-item";
+        div.innerHTML = `<strong>${resource.name}</strong>: ${resource.description || "Description not available."}`;
+        codexContent.appendChild(div);
+    }
+
+    for (const action of actions) {
+        const div = document.createElement("div");
+        div.className = "codex-item";
+        div.innerHTML = `<strong>${action.name}</strong>: ${action.description || "Description not available."}`;
+        codexContent.appendChild(div);
+    }
+}
+
+// Update all UI elements
+function updateUI()
