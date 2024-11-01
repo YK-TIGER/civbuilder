@@ -23,23 +23,22 @@ const ageResources = {
 };
 
 // 자원 업데이트 함수
+
 function updateResources() {
     const resourceBar = document.getElementById("resourcebar");
-    resourceBar.innerHTML = ""; // 이전 내용을 지우고 새로고침
-    const currentResources = ageResources[ages[currentAge]]; // 현재 시대의 자원 정의
-
+    resourceBar.innerHTML = ""; // 기존 내용을 지우기
     for (const [key, resource] of Object.entries(resources)) {
-        if (currentResources[key]) { // 현재 시대에 사용할 수 있는 자원인지 확인
-            const div = document.createElement("div");
-            div.className = "resource";
-            div.innerHTML = `
-                <img src="${resource.icon}" alt="${resource.name}">
-                <span>${resource.name}: ${resource.count} / ${resource.limit}</span> <!-- 자원 수치 표시 -->
-            `;
-            resourceBar.appendChild(div); // 자원 바에 자원 추가
-        }
+        const div = document.createElement("div");
+        div.className = "resource";
+        div.innerHTML = `
+            <img src="${resource.icon}" alt="${resource.name}">
+            <span>${resource.name}: ${resource.count} / ${resource.limit}</span>
+        `;
+        resourceBar.appendChild(div);
     }
 }
+
+
 
 // 행동에 따라 자원 및 시대 발전 조건 체크
 function checkUnlocks() {
